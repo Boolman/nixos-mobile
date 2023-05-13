@@ -1,5 +1,4 @@
-{
-  mobile-nixos
+{ mobile-nixos
 , fetchpatch
 , fetchFromGitLab
 , ...
@@ -12,8 +11,8 @@ mobile-nixos.kernel-builder {
   src = fetchFromGitLab {
     owner = "pine64-org";
     repo = "linux";
-    rev = "ppp-6.1-20230207-2251";
-    sha256 = "sha256-JeG8xlts+Ncmtt5MPu0zkew5qPaq2dDl3Tshs40CSPE=";
+    rev = "linux-pinephonepro-6.3.y";
+    sha256 = "";
   };
 
   patches = [

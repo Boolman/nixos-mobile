@@ -1,8 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
+  inherit (lib)
+    mkOption
+    types
+  ;
   cfg = config.mobile.boot.stage-1.networking;
   IP = cfg.IP;
   hostIP = cfg.hostIP;
@@ -12,21 +14,21 @@ in
     enable = mkOption {
       type = types.bool;
       default = false;
-      description = ''
+      description = lib.mdDoc ''
         Enables networking.
       '';
     };
     IP = mkOption {
       type = types.str;
       default = "172.16.42.1";
-      description = ''
+      description = lib.mdDoc ''
         IP address for the USB networking gadget.
       '';
     };
     hostIP = mkOption {
       type = types.str;
       default = "172.16.42.2";
-      description = ''
+      description = lib.mdDoc ''
         IP address for the USB networking gadget.
       '';
     };

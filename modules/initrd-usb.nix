@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
+  inherit (lib)
+    forEach
+    mkIf
+    mkOption
+    optional
+    optionals
+    types
+  ;
   inherit (config.mobile.usb) gadgetfs;
   cfg = config.mobile.boot.stage-1;
   device_name = device_config.name;
@@ -14,7 +20,7 @@ in
     enable = mkOption {
       type = types.bool;
       default = true;
-      description = ''
+      description = lib.mdDoc ''
         Enables USB features.
         For now, only Android-based devices are supported.
       '';
@@ -22,7 +28,7 @@ in
     features = mkOption {
       type = types.listOf types.str;
       default = [];
-      description = ''
+      description = lib.mdDoc ''
         `android_usb` features to enable.
       '';
     };
@@ -30,32 +36,32 @@ in
   options.mobile.usb = {
     idVendor = mkOption {
       type = types.str;
-      description = ''
+      description = lib.mdDoc ''
         USB vendor ID for the USB gadget.
       '';
     };
     idProduct = mkOption {
       type = types.str;
-      description = ''
+      description = lib.mdDoc ''
         USB product ID for the USB gadget.
       '';
     };
     mode = mkOption {
       type = types.nullOr (types.enum [ "android_usb" "gadgetfs" ]);
       default = null;
-      description = ''
+      description = lib.mdDoc ''
         The USB gadget implementation the device uses.
       '';
     };
     gadgetfs.functions = mkOption {
       type = types.attrs;
-      description = ''
+      description = lib.mdDoc ''
         Mapping of logical gadgetfs functions to their implementation names.
       '';
     };
   };
 
-  config = lib.mkIf (config.mobile.usb.mode != null && cfg.usb.enable) {
+  config = mkIf (config.mobile.usb.mode != null && cfg.usb.enable) {
     boot.specialFileSystems = {
       # This is required for gadgetfs configuration.
       "/sys/kernel/config" = {
@@ -66,7 +72,7 @@ in
       };
     };
 
-    mobile.boot.stage-1 = lib.mkIf (cfg.usb.enable && (config.mobile.usb.mode != null)) {
+    mobile.boot.stage-1 = mkIf (cfg.usb.enable && (config.mobile.usb.mode != null)) {
       kernel.modules = [
         "configfs"
         "libcomposite"

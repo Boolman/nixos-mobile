@@ -25,7 +25,13 @@ let
     echo Built for ${deviceName}
     echo
 
-    setenv bootargs ${lib.concatStringsSep " " config.boot.kernelParams}
+    # Ensure we don't pick a stray bootargs
+    env delete bootargs
+
+    # Add every args one by one, or else it may be too big to fit in a single invocation.
+    ${lib.concatMapStringsSep "\n" (arg:
+      ''setenv bootargs "$bootargs ${arg}"''
+    ) config.boot.kernelParams}
 
     ${cfg.additionalCommands}
 
@@ -69,7 +75,7 @@ let
     else
       if load ''${devtype} ''${devnum}:''${bootpart} ''${kernel_addr_r} /mobile-nixos/recovery/kernel; then
         setenv boot_type recovery
-        setenv bootargs ''${bootargs} is_recovery
+        setenv bootargs "''${bootargs} is_recovery"
       else
         echo "!!! Failed to load either of the normal and recovery kernels !!!"
         exit
@@ -175,7 +181,7 @@ in
       additionalCommands = mkOption {
         type = types.lines;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           Additional U-Boot commands to run.
         '';
       };
@@ -185,21 +191,21 @@ in
       u-boot = {
         boot-partition = mkOption {
           type = types.package;
-          description = ''
+          description = lib.mdDoc ''
             Boot partition for the system.
           '';
           visible = false;
         };
         disk-image = lib.mkOption {
           type = types.package;
-          description = ''
+          description = lib.mdDoc ''
             Full Mobile NixOS disk image for a u-boot-based system.
           '';
           visible = false;
         };
         u-boot = mkOption {
           type = types.package;
-          description = ''
+          description = lib.mdDoc ''
             U-Boot build for the system.
           '';
           visible = false;

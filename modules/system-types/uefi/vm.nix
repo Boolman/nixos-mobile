@@ -20,7 +20,7 @@ in
         type = types.bool;
         default = false;
         internal = true;
-        description = ''
+        description = lib.mdDoc ''
           Internal switch to select whether the `outputs.uefi.vm` value points
           to the composeConfig usage, or to the actual output.
         '';
@@ -29,7 +29,7 @@ in
         uefi = {
           vm = mkOption {
             type = types.package;
-            description = ''
+            description = lib.mdDoc ''
               Script to start a UEFI-based virtual machine.
             '';
             visible = false;
@@ -40,9 +40,9 @@ in
   };
   config = mkMerge [
     (mkIf config.mobile.quirks.uefi.enableVM {
-      boot.kernelParams = mkAfter [
-        "console=ttyS0"
-      ];
+      # With the VM build, it's waaay more convenient to have the serial output in the terminal.
+      mobile.boot.enableDefaultSerial = true;
+      mobile.boot.serialConsole = "ttyS0";
 
       mobile.boot.stage-1.kernel.modules = [
             # Networking

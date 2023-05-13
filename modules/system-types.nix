@@ -1,8 +1,13 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
+  inherit (lib)
+    filter
+    mkIf
+    mkOption
+    types
+  ;
+  
   failed = map (x: x.message) (filter (x: !x.assertion) config.assertions);
 
   system_type = config.mobile.system.type;
@@ -21,13 +26,13 @@ in
     system.types = mkOption {
       type = types.listOf types.str;
       internal = true;
-      description = ''
+      description = lib.mdDoc ''
         Registry of system types.
       '';
     };
     system.type = mkOption {
       type = types.enum known_system_types;
-      description = ''
+      description = lib.mdDoc ''
         Defines the kind of system the device is.
 
         The different kind of system types will define the outputs

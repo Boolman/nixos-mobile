@@ -12,7 +12,7 @@ mobile-nixos.kernel-builder {
     owner = "pine64-org";
     repo = "linux";
     rev = "linux-pinephonepro-6.3.y";
-    sha256 = "";
+    sha256 = "sha256-qSUQbgldU+q7UAm8nyl+2xrr2sOej5vZcP6dbplYXBU=";
   };
 
   patches = [

@@ -5,7 +5,7 @@
 }:
 
 mobile-nixos.kernel-builder {
-  version = "6.1.10";
+  version = "6.3.0";
   configfile = ./config.aarch64;
 
   src = fetchFromGitLab {
